@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import json
 import os
+import csv
 from datetime import datetime
 
 app = Flask(__name__)
@@ -18,6 +19,21 @@ def load_data(filename):
 def save_data(filename, data):
     with open(filename, 'w') as file:
         json.dump(data, file)
+
+def load_books_from_csv():
+    csv_file = 'data/books.csv'
+    if os.path.exists(csv_file):
+        books = []
+        with open(csv_file, 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                books.append({
+                    'id': row['id'],
+                    'name': row['name'],
+                    'author': row['author'],
+                    'status': row['status']
+                })
+        save_data(BOOKS_FILE, books)
 
 @app.route('/')
 def index():
@@ -101,5 +117,5 @@ def current_time():
 if __name__ == '__main__':
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
+    load_books_from_csv()
     app.run(debug=True)
-
