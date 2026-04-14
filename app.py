@@ -17,11 +17,12 @@ def load_data(filename):
     return []
 
 def save_data(filename, data):
+    os.makedirs(DATA_DIR, exist_ok=True)
     with open(filename, 'w') as file:
         json.dump(data, file)
 
 def load_books_from_csv():
-    csv_file = 'data/books.csv'
+    csv_file = os.path.join(DATA_DIR, 'books.csv')
     if os.path.exists(csv_file):
         books = []
         with open(csv_file, 'r') as file:
@@ -34,6 +35,13 @@ def load_books_from_csv():
                     'status': row['status']
                 })
         save_data(BOOKS_FILE, books)
+
+# Load books when app starts
+with app.app_context():
+    os.makedirs(DATA_DIR, exist_ok=True)
+    load_books_from_csv()
+    if not os.path.exists(STUDENTS_FILE):
+        save_data(STUDENTS_FILE, [])
 
 @app.route('/')
 def index():
@@ -105,7 +113,7 @@ def remove_student():
     data = request.json
     name = data['name']
     students = load_data(STUDENTS_FILE)
-    students = [student for student in students if student != name]
+    students = [s for s in students if s != name]
     save_data(STUDENTS_FILE, students)
     return '', 200
 
@@ -115,7 +123,4 @@ def current_time():
     return jsonify({'current_time': now})
 
 if __name__ == '__main__':
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-    load_books_from_csv()
     app.run(debug=True)
