@@ -6,9 +6,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-DATA_DIR = 'data'
+DATA_DIR = '/tmp'
 BOOKS_FILE = os.path.join(DATA_DIR, 'books.json')
 STUDENTS_FILE = os.path.join(DATA_DIR, 'students.json')
+CSV_FILE = os.path.join('data', 'books.csv')
 
 def load_data(filename):
     if os.path.exists(filename):
@@ -22,10 +23,9 @@ def save_data(filename, data):
         json.dump(data, file)
 
 def load_books_from_csv():
-    csv_file = os.path.join(DATA_DIR, 'books.csv')
-    if os.path.exists(csv_file):
+    if os.path.exists(CSV_FILE):
         books = []
-        with open(csv_file, 'r') as file:
+        with open(CSV_FILE, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 books.append({
