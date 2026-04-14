@@ -1,9 +1,10 @@
-document.addEventListener("DOMContentLoaded",()=>{
-    loadbooks();
+document.addEventListener("DOMContentLoaded", () => {
+    loadBooks();
     loadStudents();
-    fetchcurrentTime();
-})
-const addBookForm=document.getElementById("add-book-form");
+    fetchCurrentTime();
+});
+
+const addBookForm = document.getElementById("addBookForm");
 const bookList = document.getElementById('bookList');
 const searchButton = document.getElementById('searchButton');
 const searchQuery = document.getElementById('searchQuery');
@@ -124,6 +125,7 @@ issueBookForm.addEventListener('submit', (event) => {
     }).then(() => {
         issueBookForm.reset();
         loadBooks();
+        loadStudents();
     });
 });
 
